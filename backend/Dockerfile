@@ -2,7 +2,7 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-RUN apk add --no-cache python3 make g++ cairo-dev pango-dev jpeg-dev giflib-dev
+RUN apk add --no-cache python3 make g++ pkgconfig cairo-dev pango-dev jpeg-dev giflib-dev pixman-dev
 
 COPY package*.json ./
 RUN npm ci
@@ -22,10 +22,17 @@ RUN apk add --no-cache \
     python3 \
     make \
     g++ \
+    pkgconfig \
+    cairo-dev \
+    pango-dev \
+    jpeg-dev \
+    giflib-dev \
+    pixman-dev \
     cairo \
     pango \
     jpeg \
-    giflib
+    giflib \
+    pixman
 
 COPY package*.json ./
 RUN npm ci --omit=dev
