@@ -1,0 +1,47 @@
+{
+  "name": "finance-ai-backend",
+  "version": "1.0.0",
+  "description": "AI-Powered Personal Finance Dashboard - Backend",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.540.0",
+    "@aws-sdk/lib-storage": "^3.540.0",
+    "@fastify/cors": "^9.0.1",
+    "@fastify/multipart": "^8.3.0",
+    "@langchain/openai": "^0.1.3",
+    "bcryptjs": "^2.4.3",
+    "canvas": "^3.2.3",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.26.2",
+    "graphql": "^16.8.1",
+    "ioredis": "^5.3.2",
+    "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
+    "langchain": "^0.2.5",
+    "mercurius": "^14.1.0",
+    "mongodb": "^7.1.1",
+    "mongoose": "^8.2.4",
+    "openai": "^4.47.1",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^3.11.174",
+    "pino": "^8.19.0",
+    "pino-pretty": "^11.0.0",
+    "socket.io": "^4.7.5",
+    "tesseract.js": "^7.0.0",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.30",
+    "@types/uuid": "^9.0.8",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.3"
+  }
+}
