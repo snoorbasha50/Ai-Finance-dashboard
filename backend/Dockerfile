@@ -2,6 +2,8 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+RUN apk add --no-cache python3 make g++ cairo-dev pango-dev jpeg-dev giflib-dev
+
 COPY package*.json ./
 RUN npm ci
 
@@ -19,7 +21,11 @@ RUN apk add --no-cache \
     tesseract-ocr-data-eng \
     python3 \
     make \
-    g++
+    g++ \
+    cairo \
+    pango \
+    jpeg \
+    giflib
 
 COPY package*.json ./
 RUN npm ci --omit=dev
