@@ -5,3 +5,5 @@ dist/
 .DS_Store
 coverage/
 uploads/
+.env*
+backend/.env*
