@@ -6,7 +6,7 @@ export function useSocket(onNewTransaction: (t: Transaction) => void) {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    const socket = io('/', { transports: ['websocket'] });
+    const socket = io(import.meta.env.VITE_SOCKET_URL || '/', { transports: ['websocket'] });
     socketRef.current = socket;
 
     socket.on('new-transaction', onNewTransaction);
