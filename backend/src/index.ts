@@ -72,13 +72,20 @@ async function bootstrap() {
     );
   });
 
-  await connectProducer();
-  await connectConsumer(io);
+  if (config.kafka.enabled) {
+    await connectProducer();
+    await connectConsumer(io);
+    logger.info('Kafka producer and consumer connected');
+  } else {
+    logger.info('Kafka disabled (USE_KAFKA=false) — using direct Socket.io emit');
+  }
 
   const shutdown = async () => {
     logger.info('Shutting down gracefully...');
-    await disconnectProducer();
-    await disconnectConsumer();
+    if (config.kafka.enabled) {
+      await disconnectProducer();
+      await disconnectConsumer();
+    }
     await mongoose.disconnect();
     await fastify.close();
     process.exit(0);

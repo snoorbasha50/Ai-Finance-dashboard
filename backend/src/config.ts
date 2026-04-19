@@ -14,6 +14,7 @@ export const config = {
   },
 
   kafka: {
+    enabled: process.env.USE_KAFKA === 'true',
     broker: process.env.KAFKA_BROKER || 'localhost:9092',
     topic: process.env.KAFKA_TOPIC || 'transactions',
     groupId: 'finance-consumer-group',

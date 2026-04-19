@@ -4,6 +4,7 @@ import { extractTextFromPDF } from '../services/pdf.service';
 import { categorizeTransactions } from '../services/ai.service';
 import { uploadPDFToS3 } from '../services/s3.service';
 import { publishTransaction } from '../kafka/producer';
+import { emitToAll } from '../services/socket.service';
 import { redisService } from '../services/redis.service';
 import { Transaction } from '../models/transaction.model';
 import { logger } from '../utils/logger';
@@ -103,7 +104,11 @@ export async function uploadPDF(request: FastifyRequest, reply: FastifyReply) {
       };
 
       await Transaction.create(transaction);
-      await publishTransaction({ ...transaction, userId: userId.toString() });
+      if (config.kafka.enabled) {
+        await publishTransaction({ ...transaction, userId: userId.toString() });
+      } else {
+        emitToAll('new-transaction', { ...transaction, userId: userId.toString() });
+      }
       savedTransactions.push(transaction);
     } catch (err) {
       logger.warn({ err, description: t.description }, 'Skipped one transaction');
