@@ -1,9 +1,14 @@
+import { MercuriusContext } from 'mercurius';
 import { Transaction } from '../models/transaction.model';
 import { redisService } from '../services/redis.service';
 
-interface GqlContext {
-  userId: string;
+declare module 'mercurius' {
+  interface MercuriusContext {
+    userId: string;
+  }
 }
+
+type GqlContext = MercuriusContext;
 
 interface TransactionsArgs {
   page?: number;
