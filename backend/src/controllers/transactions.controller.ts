@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Transaction, TransactionCategory } from '../models/transaction.model';
 import { redisService } from '../services/redis.service';
 import { publishTransaction } from '../kafka/producer';
+import { emitToAll } from '../services/socket.service';
+import { config } from '../config';
 import { logger } from '../utils/logger';
 
 const MOCK_TRANSACTIONS = [
@@ -174,13 +176,17 @@ export async function createMock(request: FastifyRequest, reply: FastifyReply) {
     year: now.getFullYear(),
   };
 
-  // Publish to Kafka → consumer will save to MongoDB + emit via Socket.io
-  await publishTransaction({ ...transaction, userId: userId.toString() });
+  if (config.kafka.enabled) {
+    await publishTransaction({ ...transaction, userId: userId.toString() });
+  } else {
+    await Transaction.create(transaction);
+    emitToAll('new-transaction', { ...transaction, userId: userId.toString() });
+  }
 
   await redisService.deletePattern(`*:${userId}*`);
 
-  logger.info({ id: transaction.id }, 'Mock transaction published');
-  return reply.code(201).send({ message: 'Mock transaction sent to Kafka', transaction });
+  logger.info({ id: transaction.id }, 'Mock transaction created');
+  return reply.code(201).send({ message: 'Mock transaction created', transaction });
 }
 
 // DELETE /api/transactions/:id

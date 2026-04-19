@@ -6,6 +6,22 @@ import { logger } from '../utils/logger';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js');
 
+class NodeCanvasFactory {
+  create(width: number, height: number) {
+    const canvas = createCanvas(width, height);
+    const context = canvas.getContext('2d');
+    return { canvas, context };
+  }
+  reset(canvasAndContext: { canvas: ReturnType<typeof createCanvas>; context: unknown }, width: number, height: number) {
+    canvasAndContext.canvas.width = width;
+    canvasAndContext.canvas.height = height;
+  }
+  destroy(canvasAndContext: { canvas: ReturnType<typeof createCanvas> }) {
+    canvasAndContext.canvas.width = 0;
+    canvasAndContext.canvas.height = 0;
+  }
+}
+
 async function extractWithPdfParse(buffer: Buffer): Promise<string> {
   const data = await pdfParse(buffer);
   return data.text.trim();
@@ -14,7 +30,8 @@ async function extractWithPdfParse(buffer: Buffer): Promise<string> {
 async function extractWithOCR(buffer: Buffer): Promise<string> {
   logger.info('Falling back to OCR (tesseract.js) for scanned PDF...');
 
-  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer) });
+  const canvasFactory = new NodeCanvasFactory();
+  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer), canvasFactory });
   const pdf = await loadingTask.promise;
   const totalPages = pdf.numPages;
 
@@ -23,21 +40,19 @@ async function extractWithOCR(buffer: Buffer): Promise<string> {
   const worker = await createWorker('eng');
   const allText: string[] = [];
 
-  // Process max 10 pages to avoid timeout
   for (let pageNum = 1; pageNum <= Math.min(totalPages, 10); pageNum++) {
     const page = await pdf.getPage(pageNum);
     const viewport = page.getViewport({ scale: 2.0 });
 
-    const canvas = createCanvas(viewport.width, viewport.height);
-    const context = canvas.getContext('2d');
+    const canvasAndContext = canvasFactory.create(viewport.width, viewport.height);
 
     await page.render({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      canvasContext: context as any,
+      canvasContext: canvasAndContext.context,
       viewport,
+      canvasFactory,
     }).promise;
 
-    const imageBuffer = canvas.toBuffer('image/png');
+    const imageBuffer = (canvasAndContext.canvas as ReturnType<typeof createCanvas>).toBuffer('image/png');
     const { data: { text } } = await worker.recognize(imageBuffer);
     allText.push(text);
 
@@ -52,7 +67,6 @@ async function extractWithOCR(buffer: Buffer): Promise<string> {
 }
 
 export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
-  // Try text-based first (fast, free, accurate)
   try {
     const text = await extractWithPdfParse(buffer);
     if (text && text.length > 50) {
@@ -63,7 +77,6 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
     logger.warn({ err }, 'pdf-parse failed, switching to OCR...');
   }
 
-  // OCR fallback for scanned PDFs
   const ocrText = await extractWithOCR(buffer);
 
   if (!ocrText || ocrText.length < 50) {
