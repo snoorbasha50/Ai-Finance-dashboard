@@ -2,15 +2,15 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://dried-baby-gst-enclosure.trycloudflare.com/api/:path*"
+      "destination": "http://13.205.163.188:4000/api/:path*"
     },
     {
       "source": "/graphql",
-      "destination": "https://dried-baby-gst-enclosure.trycloudflare.com/graphql"
+      "destination": "http://13.205.163.188:4000/graphql"
     },
     {
       "source": "/socket.io/:path*",
-      "destination": "https://dried-baby-gst-enclosure.trycloudflare.com/socket.io/:path*"
+      "destination": "http://13.205.163.188:4000/socket.io/:path*"
     }
   ]
 }
