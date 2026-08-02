@@ -32,6 +32,7 @@ function exportCSV(transactions: Transaction[]) {
 }
 
 export default function Transactions() {
+  console.log("Transactions component rendered");
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState('');
   const [type, setType] = useState('');
@@ -43,6 +44,8 @@ export default function Transactions() {
       transactionsApi.getAll({ page, limit: 20, category: category || undefined, type: type || undefined, search: search || undefined })
         .then((r) => r.data),
   });
+
+  console.log("Transactions data:", data);
 
   return (
     <div className="space-y-6">
