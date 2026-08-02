@@ -1,9 +1,8 @@
 node_modules/
 dist/
 .env
+.env.*
+!.env.example
 *.log
 .DS_Store
 coverage/
-uploads/
-.env*
-backend/.env*
