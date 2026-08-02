@@ -114,10 +114,11 @@ export async function uploadPDF(request: FastifyRequest, reply: FastifyReply) {
       logger.warn({ err, description: t.description }, 'Skipped one transaction');
     }
   }
+  console.log('Saved transactions:', savedTransactions.length);
 
-  await redisService.deletePattern(`*:${userId}*`);
+  // await redisService.deletePattern(`*:${userId}*`);
 
-  logger.info({ count: savedTransactions.length, s3Url }, 'Upload complete');
+  // logger.info({ count: savedTransactions.length, s3Url }, 'Upload complete');
 
   return reply.code(201).send({
     message: `Successfully parsed ${savedTransactions.length} transactions`,

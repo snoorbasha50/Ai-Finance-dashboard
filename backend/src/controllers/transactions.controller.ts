@@ -23,6 +23,7 @@ const MOCK_TRANSACTIONS = [
 // GET /api/transactions
 export async function getTransactions(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user!.userId;
+  console.log('Fetching transactions for user:', userId);
   const {
     page = 1,
     limit = 20,
@@ -40,10 +41,17 @@ export async function getTransactions(request: FastifyRequest, reply: FastifyRep
     endDate?: string;
     search?: string;
   };
+  console.log('Query parameters:', { page, limit, category, type, startDate, endDate, search });
 
-  const cacheKey = `transactions:${userId}:${page}:${limit}:${category}:${type}:${startDate}:${endDate}:${search}`;
-  const cached = await redisService.get(cacheKey);
-  if (cached) return reply.send(cached);
+  // const cacheKey = `transactions:${userId}:${page}:${limit}:${category}:${type}:${startDate}:${endDate}:${search}`;
+  // console.log('Cache key:', cacheKey);
+  // const cached = await redisService.get(cacheKey);
+  // console.log('Cache key:', cacheKey, 'Cached result:', cached);
+  // if (cached){
+  //   console.log("Serving from Redis");
+  //   return reply.send(cached);
+  // } 
+  // console.log('Cache miss, querying database for transactions');
 
   const filter: Record<string, unknown> = { userId };
   if (category) filter.category = category;
@@ -59,6 +67,7 @@ export async function getTransactions(request: FastifyRequest, reply: FastifyRep
   const limitNum = Number(limit);
   const skip = (pageNum - 1) * limitNum;
 
+  console.log(JSON.stringify(filter, null, 2));
   const [data, total] = await Promise.all([
     Transaction.find(filter).sort({ date: -1 }).skip(skip).limit(limitNum).lean(),
     Transaction.countDocuments(filter),
@@ -72,16 +81,16 @@ export async function getTransactions(request: FastifyRequest, reply: FastifyRep
     totalPages: Math.ceil(total / limitNum),
   };
 
-  await redisService.set(cacheKey, result, 300);
+  // await redisService.set(cacheKey, result, 300);
   return reply.send(result);
 }
 
 // GET /api/transactions/summary
 export async function getSummary(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user!.userId;
-  const cacheKey = `summary:${userId}`;
-  const cached = await redisService.get(cacheKey);
-  if (cached) return reply.send(cached);
+  // const cacheKey = `summary:${userId}`;
+  // const cached = await redisService.get(cacheKey);
+  // if (cached) return reply.send(cached);
 
   const transactions = await Transaction.find({ userId }).lean();
 
@@ -112,16 +121,16 @@ export async function getSummary(request: FastifyRequest, reply: FastifyReply) {
     categoryBreakdown,
   };
 
-  await redisService.set(cacheKey, result, 300);
+  // await redisService.set(cacheKey, result, 300);
   return reply.send(result);
 }
 
 // GET /api/transactions/monthly
 export async function getMonthly(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user!.userId;
-  const cacheKey = `monthly:${userId}`;
-  const cached = await redisService.get(cacheKey);
-  if (cached) return reply.send(cached);
+  // const cacheKey = `monthly:${userId}`;
+  // const cached = await redisService.get(cacheKey);
+  // if (cached) return reply.send(cached);
 
   const sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
@@ -152,12 +161,13 @@ export async function getMonthly(request: FastifyRequest, reply: FastifyReply) {
     a.month.localeCompare(b.month)
   );
 
-  await redisService.set(cacheKey, result, 300);
+  // await redisService.set(cacheKey, result, 300);
   return reply.send(result);
 }
 
 // POST /api/transactions/mock
 export async function createMock(request: FastifyRequest, reply: FastifyReply) {
+  console.log('Creating mock transaction',request.user);
   const userId = request.user!.userId;
   const random = MOCK_TRANSACTIONS[Math.floor(Math.random() * MOCK_TRANSACTIONS.length)];
   const now = new Date();
@@ -175,6 +185,7 @@ export async function createMock(request: FastifyRequest, reply: FastifyReply) {
     month: now.getMonth() + 1,
     year: now.getFullYear(),
   };
+  console.log('Mock transaction data:', transaction);
 
   if (config.kafka.enabled) {
     await publishTransaction({ ...transaction, userId: userId.toString() });

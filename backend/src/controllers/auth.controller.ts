@@ -35,6 +35,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   }
 
   const { email, password, name } = result.data;
+  console.log('Registering user:', { email, name });
 
   const existing = await User.findOne({ email });
   if (existing) {

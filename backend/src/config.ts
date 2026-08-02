@@ -1,12 +1,14 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+
+
 export const config = {
   port: parseInt(process.env.PORT || '4000'),
   nodeEnv: process.env.NODE_ENV || 'development',
 
   mongodb: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/finance_ai',
+    uri: process.env.MONGODB_URI || "connection_string_here",
   },
 
   redis: {
