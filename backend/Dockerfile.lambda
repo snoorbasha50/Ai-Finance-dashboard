@@ -1,0 +1,23 @@
+FROM public.ecr.aws/lambda/nodejs:22
+
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+RUN dnf install -y \
+    cairo-devel \
+    pango-devel \
+    libjpeg-turbo-devel \
+    giflib-devel \
+    pixman-devel \
+    gcc-c++ \
+    make \
+    python3
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+CMD ["dist/lambda.handler"]
