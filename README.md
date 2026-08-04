@@ -59,7 +59,7 @@ https://github.com/snoorbasha50/Ai-Finance-dashboard
 
 - Node.js
 - Express.js
-- PostgreSQL
+- MongoDB
 
 ### AI
 
