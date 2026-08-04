@@ -1,109 +1,130 @@
 # 💰 AI Finance Dashboard
 
-An AI-powered personal finance dashboard that helps users manage finances, analyze spending patterns, and generate intelligent financial insights using Large Language Models.
+An AI-powered full-stack finance management platform that helps users track expenses, analyze financial data, and generate intelligent insights through modern web technologies and AI integration.
 
-The application combines financial analytics with AI-powered recommendations to help users make better financial decisions.
+Designed with a scalable architecture, the application combines React, Node.js, GraphQL, PostgreSQL, Kafka, and Docker to deliver a production-style finance platform.
 
 ---
 
-## 🌐 Live Demo
+# 🌐 Live Demo
 
 https://ai-finance-dashboard-bice-alpha.vercel.app/login
 
-## 💻 GitHub Repository
+---
+
+# 💻 GitHub Repository
 
 https://github.com/snoorbasha50/Ai-Finance-dashboard
 
 ---
 
-## ✨ Features
+# ✨ Features
 
-- 🔐 User Authentication
-- 📊 Interactive Finance Dashboard
-- 💳 Expense Tracking
-- 💰 Income Management
-- 📈 Spending Analytics
-- 🤖 AI Financial Insights
-- 📅 Transaction History
-- 📱 Responsive Design
-
----
-
-## 🏗️ System Architecture
-
-```
-               React + TypeScript
-                      │
-                      ▼
-               Node.js REST API
-                      │
-                      ▼
-                 PostgreSQL
-                      │
-                      ▼
-              AI Recommendation Engine
-```
+- 🔐 Secure Authentication
+- 📊 Interactive Financial Dashboard
+- 💳 Expense & Income Management
+- 📈 Analytics & Reports
+- 🤖 AI-powered Financial Insights
+- ⚡ GraphQL APIs
+- ☁️ Serverless-ready backend
+- 🐳 Dockerized Development Environment
 
 ---
 
-## 🛠 Tech Stack
+# 🏗️ System Architecture
 
-### Frontend
+```
+                React + TypeScript
+                        │
+                        ▼
+                 GraphQL / REST API
+                        │
+        ┌───────────────┼────────────────┐
+        ▼               ▼                ▼
+ Authentication    Business Logic     AI Services
+        │               │                │
+        └───────────────┼────────────────┘
+                        ▼
+                  PostgreSQL Database
+                        │
+                        ▼
+                    Kafka Events
+```
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
 
 - React
 - TypeScript
-- Tailwind CSS
 - Vite
+- CSS
 
-### Backend
+## Backend
 
 - Node.js
-- Express.js
+- TypeScript
+- GraphQL
 - MongoDB
+- Docker
 
-### AI
 
-- Google Gemini API
+## Deployment
+
+- AWS Lambda
+- Docker
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
 ```
-client/
+frontend/
 ├── src/
+│   ├── api/
 │   ├── components/
-│   ├── pages/
 │   ├── hooks/
-│   └── services/
+│   ├── pages/
+│   ├── store/
+│   ├── types/
+│   └── App.tsx
 
-server/
-├── controllers/
-├── routes/
-├── middleware/
-├── models/
-└── database/
+backend/
+├── src/
+│   ├── controllers/
+│   ├── services/
+│   ├── routes/
+│   ├── middleware/
+│   ├── graphql/
+│   ├── kafka/
+│   ├── models/
+│   ├── utils/
+│   ├── lambda.ts
+│   ├── app.ts
+│   └── server.ts
 ```
 
 ---
 
-## 🚀 Getting Started
+# 🚀 Getting Started
 
-### Clone Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/snoorbasha50/Ai-Finance-dashboard.git
 ```
 
-### Backend
+## Backend
 
 ```bash
 cd backend
 npm install
-npm start
+npm run dev
 ```
 
-### Frontend
+## Frontend
 
 ```bash
 cd frontend
@@ -113,65 +134,34 @@ npm run dev
 
 ---
 
-## 📌 Key Features
+# 🚀 Highlights
 
-### Dashboard
-
-- Financial Overview
-- Expense Breakdown
-- Monthly Analytics
-- Category-wise Spending
-
-### AI Assistant
-
-- Spending Summary
-- Smart Financial Insights
-- Budget Recommendations
-
-### Authentication
-
-- Secure Login
-- Protected Routes
-- Session Management
+- Full Stack Finance Application
+- React + TypeScript
+- GraphQL APIs
+- Kafka Integration
+- PostgreSQL
+- Docker Support
+- Serverless Ready (AWS Lambda)
+- Clean Layered Architecture
+- Scalable Backend Design
 
 ---
 
-## 🚀 Deployment
+# 🔮 Future Enhancements
 
-### Frontend
-
-- Vercel
-
-### Backend
-
-- Node.js Server
-
----
-
-## ⭐ Highlights
-
-- AI-Powered Financial Assistant
-- Interactive Dashboard
-- Responsive UI
-- REST APIs
-- PostgreSQL Integration
-- Modern Architecture
-- Scalable Design
-
----
-
-## 🔮 Future Enhancements
-
-- Investment Tracking
+- Budget Planning
+- Investment Portfolio Tracking
+- Real-time Notifications
 - OCR Receipt Scanner
-- Budget Notifications
 - Multi-Currency Support
-- Mobile Application
+- AI Chat Assistant
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Noorbasha Shaik**
 
 GitHub: https://github.com/snoorbasha50
+
