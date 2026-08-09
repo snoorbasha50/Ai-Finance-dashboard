@@ -45,7 +45,7 @@ https://github.com/snoorbasha50/Ai-Finance-dashboard
         │               │                │
         └───────────────┼────────────────┘
                         ▼
-                  PostgreSQL Database
+                  MongoDB Database
                         │
                         ▼
                     Kafka Events
